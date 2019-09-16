@@ -1,0 +1,155 @@
+<template>
+<div>
+  <br>
+  <p>Ordre</p>
+  <br>
+  <div id="text">
+  <input type="text" value="" placeholder="LU-nr/Sambandsnr/prosjektKode" ref="searchvalue">
+  <span id="search" @click="search">&#x1F50E;</span>
+  </div>
+  <hr>
+<br><br>
+<div id="bdiv">
+<b-button class="button">Nordic Connect</b-button>
+<b-button class="button">Whole Sale</b-button>
+<b-button class="button">WAN</b-button>
+<b-button class="button">Mobil</b-button>
+</div>
+<br><br>
+<!-- <div>
+    <b-table id="table" striped hover :items="items"></b-table>
+  </div> -->
+  <div>
+    <table id="table">
+      <tr>
+        <th>Los Id</th>
+        <th>prosjektKode</th>
+        <th>Ordere System</th>
+        <th>sentdtdato</th>
+        <th>Installatios data</th>
+        <th>Status</th>
+        <th>Ordre type</th>
+        <th>Lu-nr</th>
+      </tr>
+      <tr v-for="d in info">
+        <td id="border"><router-link v-bind:to="'/cpe/'+ d.LosId">{{d.LosId}}</router-link></td>
+			<td>{{d.prosjektKode}}</td>
+			<td>{{d.OrdereSystem}}</td>
+			<td>{{d.sentdtdato}}</td>
+			<td>{{d.Installatiosdata}}</td>
+			<td>{{d.Status}}</td>
+			<td>{{d.Ordretype}}</td>
+			<td>{{d.Lunr}}</td>
+      </tr>
+    </table>
+  </div>
+</div>
+</template>
+<script>
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+import axios from 'axios'
+export default {
+  methods:{
+      search:function(){
+        console.log('Hello')
+       this.searchid=this.$refs.searchvalue.value;
+       this.info=[];
+       axios
+      .get('https://my-json-server.typicode.com/ChennuruAkhil/samplejson/search/'+this.searchid)
+      .then(response => this.info.push(response.data))
+      }
+  },
+  data() {
+      return {
+        searchid:'',
+        info:[],
+        ata:[{
+			"LosId": 1,
+			"prosjektKode": 14,
+			"OrdereSystem": 3,
+			"sentdtdato": 6,
+			"Installatiosdata": 6,
+			"Status": 6,
+			"Ordretype": 6,
+			"Lunr": 45
+		},
+		{
+			"LosId": 1,
+			"prosjektKode": 14,
+			"OrdereSystem": 3,
+			"sentdtdato": 6,
+			"Installatiosdata": 6,
+			"Status": 6,
+			"Ordretype": 6,
+			"Lunr": 45
+		}]
+      }
+    },
+    created(){
+       axios
+      .get('https://my-json-server.typicode.com/ChennuruAkhil/samplejson/search')
+      .then(response => this.info=response.data)
+  },
+    }
+</script>
+<style lang="less" scoped>
+p{
+  color: black;
+  font-size: 35px
+}
+#text{
+  text-align: center;
+  input{
+    border:0;
+    width: 18%
+  }
+  #search{
+    cursor: pointer;
+  }
+}
+hr{
+  width:300px;
+  color: #eee;
+}
+#bdiv{
+  margin-left: 15%;
+   .button{
+  width: 15%;
+  margin-left: 5%;
+  background-color: lightpink;
+  color: black;
+  cursor: pointer;
+  border-radius: 16px;
+  border:none
+}
+}
+#table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 60%;
+  margin-left: 22%;
+  border-collapse:separate; 
+  border-spacing:0 15px; 
+  // border:1px solid #eee;
+  th {
+  //border: 1px solid #dddddd;
+  text-align: center;
+  color:rgb(12, 198, 245);
+}
+ 
+td{
+  text-align: center;
+  color:black;
+  border-bottom:1px solid #eee;
+  border-top: 1px solid #eee;
+  #border{
+    border-left: 1px solid #eee;
+  }
+  
+}
+
+}
+
+
+</style>

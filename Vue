@@ -1,155 +1,103 @@
 <template>
 <div>
-  <br>
-  <p>Ordre</p>
-  <br>
-  <div id="text">
-  <input type="text" value="" placeholder="LU-nr/Sambandsnr/prosjektKode" ref="searchvalue">
-  <span id="search" @click="search">&#x1F50E;</span>
-  </div>
-  <hr>
-<br><br>
+    <h2 v-on:click="change()">{{title}}</h2>
+    <ul>
+        <li><router-link to="/home">Home</router-link></li>
+    </ul>
 <div id="bdiv">
-<b-button class="button">Nordic Connect</b-button>
-<b-button class="button">Whole Sale</b-button>
-<b-button class="button">WAN</b-button>
-<b-button class="button">Mobil</b-button>
+<b-button class="button"  @click="task('OrderSystem:NC',$event)"  >Nordic Connect</b-button>
+<b-button class="button"  @click="task('WS',$event)" >Whole Sale</b-button>
+<b-button class="button"  @click="task('WN',$event)">WAN</b-button>
+<b-button class="button"  @click="task('MB',$event)">Mobil</b-button>
 </div>
-<br><br>
-<!-- <div>
-    <b-table id="table" striped hover :items="items"></b-table>
-  </div> -->
-  <div>
-    <table id="table">
-      <tr>
-        <th>Los Id</th>
-        <th>prosjektKode</th>
-        <th>Ordere System</th>
-        <th>sentdtdato</th>
-        <th>Installatios data</th>
-        <th>Status</th>
-        <th>Ordre type</th>
-        <th>Lu-nr</th>
-      </tr>
-      <tr v-for="d in info">
-        <td id="border"><router-link v-bind:to="'/cpe/'+ d.LosId">{{d.LosId}}</router-link></td>
-			<td>{{d.prosjektKode}}</td>
-			<td>{{d.OrdereSystem}}</td>
-			<td>{{d.sentdtdato}}</td>
-			<td>{{d.Installatiosdata}}</td>
-			<td>{{d.Status}}</td>
-			<td>{{d.Ordretype}}</td>
-			<td>{{d.Lunr}}</td>
-      </tr>
-    </table>
-  </div>
+<div id="bdiv">
+<b-button class="button"  @click="task('AC',$event)"  >A</b-button>
+<b-button class="button"  @click="task('BS',$event)" >B</b-button>
+<b-button class="button"  @click="task('CN',$event)">C</b-button>
+<b-button class="button"  @click="task('DB',$event)">D</b-button>
 </div>
+<li>
+<ul v-for="task in taskarr">{{task}}</ul>
+</li>
+
+ <b-button-group size="sm">
+      <b-button
+        v-for="(btn, idx) in buttons"
+        :key="idx"
+        :pressed.sync="btn.state"
+        variant="primary"
+      >
+        {{ btn.caption }}
+      </b-button>
+    </b-button-group>
+    <p>Pressed States: <strong>{{ btnStates }}</strong></p>
+    </div>
 </template>
+<style scoped>
+h2{
+    color: antiquewhite;
+    background-color: blue;
+    padding: 30px;
+    text-align: center
+}
+.actives{
+    background-color: brown;
+}
+</style>
 <script>
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-import axios from 'axios'
+import {bus} from '../main'
 export default {
-  methods:{
-      search:function(){
-        console.log('Hello')
-       this.searchid=this.$refs.searchvalue.value;
-       this.info=[];
-       axios
-      .get('https://my-json-server.typicode.com/ChennuruAkhil/samplejson/search/'+this.searchid)
-      .then(response => this.info.push(response.data))
-      }
-  },
-  data() {
-      return {
-        searchid:'',
-        info:[],
-        ata:[{
-			"LosId": 1,
-			"prosjektKode": 14,
-			"OrdereSystem": 3,
-			"sentdtdato": 6,
-			"Installatiosdata": 6,
-			"Status": 6,
-			"Ordretype": 6,
-			"Lunr": 45
-		},
-		{
-			"LosId": 1,
-			"prosjektKode": 14,
-			"OrdereSystem": 3,
-			"sentdtdato": 6,
-			"Installatiosdata": 6,
-			"Status": 6,
-			"Ordretype": 6,
-			"Lunr": 45
-		}]
+    //name:'Header',
+    props:['title'],
+    data(){
+        return{
+            isactive:false,
+            isbctive:false,
+            iscctive:false,
+            isdctive:false,
+            cos:'',
+            boo:false,
+            buttons: [
+          { caption: 'Toggle 1', state: true },
+          { caption: 'Toggle 2', state: false },
+          { caption: 'Toggle 3', state: true },
+          { caption: 'Toggle 4', state: false }
+        ],
+        taskarr:[]
+        }
+    },
+    computed: {
+      btnStates() {
+        return this.buttons.map(btn => btn.caption)
       }
     },
-    created(){
-       axios
-      .get('https://my-json-server.typicode.com/ChennuruAkhil/samplejson/search')
-      .then(response => this.info=response.data)
-  },
+    methods:{
+        
+      task: function(val,e){
+          this.cos=val;
+          this.boo=!this.boo;
+      console.log('task'+val);
+      console.log(e);  
+      e.target.classList.toggle('actives');
+     // this.isactive=!this.isactive; 
+     if(!this.taskarr.includes(val)){
+     this.taskarr.push(val);
+     }
+     else{
+       var index=this.taskarr.indexOf(val);
+            this.taskarr.splice(index,1);
+     }
+     //console.log(this.taskarr.includes('NC'));
+      },
+        change:function(){
+            console.log("changed");
+            //this.$emit('change','Vue Changed');
+            this.title="Vue Changed";
+            bus.$emit('change','fucking Vue');
+        }
     }
+}
 </script>
-<style lang="less" scoped>
-p{
-  color: black;
-  font-size: 35px
-}
-#text{
-  text-align: center;
-  input{
-    border:0;
-    width: 18%
-  }
-  #search{
-    cursor: pointer;
-  }
-}
-hr{
-  width:300px;
-  color: #eee;
-}
-#bdiv{
-  margin-left: 15%;
-   .button{
-  width: 15%;
-  margin-left: 5%;
-  background-color: lightpink;
-  color: black;
-  cursor: pointer;
-  border-radius: 16px;
-  border:none
-}
-}
-#table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 60%;
-  margin-left: 22%;
-  border-collapse:separate; 
-  border-spacing:0 15px; 
-  // border:1px solid #eee;
-  th {
-  //border: 1px solid #dddddd;
-  text-align: center;
-  color:rgb(12, 198, 245);
-}
- 
-td{
-  text-align: center;
-  color:black;
-  border-bottom:1px solid #eee;
-  border-top: 1px solid #eee;
-  #border{
-    border-left: 1px solid #eee;
-  }
-  
-}
 
-}
-
-
-</style>
